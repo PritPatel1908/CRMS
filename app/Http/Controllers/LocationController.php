@@ -163,4 +163,65 @@ class LocationController extends Controller
 
         return redirect()->route('location.index')->with('success', 'Location deleted successfully');
     }
+    
+    /**
+     * Get locations data for DataTables
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getData(Request $request)
+    {
+        $draw = $request->get('draw');
+        $start = $request->get('start', 0);
+        $length = $request->get('length', 10);
+        $search = $request->get('search.value');
+        
+        // Query builder for locations
+        $query = Location::query();
+        
+        // Apply search if provided
+        if (!empty($search)) {
+            $query->where(function($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                  ->orWhere('email', 'like', "%{$search}%")
+                  ->orWhere('address', 'like', "%{$search}%")
+                  ->orWhere('city', 'like', "%{$search}%")
+                  ->orWhere('state', 'like', "%{$search}%")
+                  ->orWhere('country', 'like', "%{$search}%");
+            });
+        }
+        
+        // Get total count
+        $totalRecords = $query->count();
+        
+        // Apply pagination
+        $locations = $query->skip($start)
+                          ->take($length)
+                          ->latest()
+                          ->get();
+        
+        // Format data for DataTables
+        $data = [];
+        foreach ($locations as $location) {
+            $data[] = [
+                'id' => $location->id,
+                'name' => $location->name,
+                'email' => $location->email,
+                'address' => $location->address,
+                'city' => $location->city,
+                'state' => $location->state,
+                'country' => $location->country,
+                'status' => $location->status == 1 ? 'Active' : 'Inactive',
+                'created_at' => $location->created_at->format('d M Y, h:i A')
+            ];
+        }
+        
+        return response()->json([
+            'draw' => intval($draw),
+            'recordsTotal' => $totalRecords,
+            'recordsFiltered' => $totalRecords,
+            'data' => $data
+        ]);
+    }
 }

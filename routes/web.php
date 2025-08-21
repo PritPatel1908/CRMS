@@ -17,3 +17,4 @@ Route::get('/', function () {
 })->name('dashboard')->middleware('auth');
 
 Route::resource('location', LocationController::class);
+Route::get('/locations/data', [LocationController::class, 'getData'])->name('locations.data');
