@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Location;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class LocationController extends Controller
 {
@@ -38,6 +40,7 @@ class LocationController extends Controller
         // Validate the request
         $validated = $request->validate([
             'name' => 'required|string|max:255',
+            'email' => 'nullable|email|max:255',
             'address' => 'nullable|string|max:255',
             'city' => 'nullable|string|max:255',
             'state' => 'nullable|string|max:255',
@@ -45,8 +48,20 @@ class LocationController extends Controller
             'zip_code' => 'nullable|string|max:20',
         ]);
 
+        // Set the created_by field to the current authenticated user's ID
+        $validated['created_by'] = auth()->id();
+
         // Create the location
-        Location::create($validated);
+        $location = Location::create($validated);
+
+        // Check if request is AJAX
+        if ($request->ajax()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Location created successfully',
+                'location' => $location
+            ]);
+        }
 
         return redirect()->route('location.index')->with('success', 'Location created successfully');
     }
@@ -100,15 +115,29 @@ class LocationController extends Controller
         // Validate the request
         $validated = $request->validate([
             'name' => 'required|string|max:255',
+            'email' => 'nullable|email|max:255',
             'address' => 'nullable|string|max:255',
             'city' => 'nullable|string|max:255',
             'state' => 'nullable|string|max:255',
             'country' => 'nullable|string|max:255',
             'zip_code' => 'nullable|string|max:20',
+            'status' => 'nullable|integer',
         ]);
+
+        // Set the updated_by field to the current authenticated user's ID
+        $validated['updated_by'] = auth()->id();
 
         // Update the location
         $location->update($validated);
+
+        // Check if request is AJAX
+        if ($request->ajax()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Location updated successfully',
+                'location' => $location
+            ]);
+        }
 
         return redirect()->route('location.index')->with('success', 'Location updated successfully');
     }
@@ -119,10 +148,18 @@ class LocationController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Request $request, $id)
     {
         $location = Location::findOrFail($id);
         $location->delete();
+
+        // Check if request is AJAX
+        if ($request->ajax()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Location deleted successfully'
+            ]);
+        }
 
         return redirect()->route('location.index')->with('success', 'Location deleted successfully');
     }
