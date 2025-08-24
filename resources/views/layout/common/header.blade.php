@@ -3,17 +3,17 @@
         <div class="d-flex align-items-center gap-2">
 
             <!-- Logo -->
-            <a href="index.html" class="logo">
+            <a href="{{ route('dashboard') }}" class="logo">
 
                 <!-- Logo Normal -->
                 <span class="logo-light">
-                    <span class="logo-lg"><img src="assets/img/logo.svg" alt="logo"></span>
-                    <span class="logo-sm"><img src="assets/img/logo-small.svg" alt="small logo"></span>
+                    <span class="logo-lg"><img src="{{ asset('assets/img/logo.svg') }}" alt="logo"></span>
+                    <span class="logo-sm"><img src="{{ asset('assets/img/logo-small.svg') }}" alt="small logo"></span>
                 </span>
 
                 <!-- Logo Dark -->
                 <span class="logo-dark">
-                    <span class="logo-lg"><img src="assets/img/logo-white.svg" alt="dark logo"></span>
+                    <span class="logo-lg"><img src="{{ asset('assets/img/logo-white.svg') }}" alt="dark logo"></span>
                 </span>
             </a>
 
@@ -74,7 +74,7 @@
                     <div class="dropdown-menu dropdown-menu-end dropdown-menu-md p-2">
 
                         <!-- Item-->
-                        <a href="contacts.html" class="dropdown-item">
+                        <a href="{{ route('dashboard') }}" class="dropdown-item">
                             <div class="d-flex align-items-center justify-content-between">
                                 <div>
                                     <span class="d-flex mb-1 fw-semibold text-dark">Contacts</span>
@@ -85,7 +85,7 @@
                         </a>
 
                         <!-- Item-->
-                        <a href="pipeline.html" class="dropdown-item">
+                        <a href="{{ route('dashboard') }}" class="dropdown-item">
                             <div class="d-flex align-items-center justify-content-between">
                                 <div>
                                     <span class="d-flex mb-1 fw-semibold text-dark">Pipeline</span>
@@ -96,7 +96,7 @@
                         </a>
 
                         <!-- Item-->
-                        <a href="activities.html" class="dropdown-item">
+                        <a href="{{ route('dashboard') }}" class="dropdown-item">
                             <div class="d-flex align-items-center justify-content-between">
                                 <div>
                                     <span class="d-flex mb-1 fw-semibold text-dark">Activities</span>
@@ -107,7 +107,7 @@
                         </a>
 
                         <!-- Item-->
-                        <a href="analytics.html" class="dropdown-item">
+                        <a href="{{ route('dashboard') }}" class="dropdown-item">
                             <div class="d-flex align-items-center justify-content-between">
                                 <div>
                                     <span class="d-flex mb-1 fw-semibold text-dark">Analytics</span>
@@ -124,14 +124,14 @@
             <!-- faq -->
             <div class="header-item d-none d-sm-flex">
                 <div class="dropdown me-2">
-                    <a href="faq.html" class="btn topbar-link topbar-indigo-link"><i class="ti ti-help-hexagon"></i></a>
+                    <a href="{{ route('dashboard') }}" class="btn topbar-link topbar-indigo-link"><i class="ti ti-help-hexagon"></i></a>
                 </div>
             </div>
 
             <!-- report -->
             <div class="header-item d-none d-sm-flex">
                 <div class="dropdown me-2">
-                    <a href="lead-reports.html" class="btn topbar-link topbar-warning-link"><i
+                    <a href="{{ route('dashboard') }}" class="btn topbar-link topbar-warning-link"><i
                             class="ti ti-chart-pie"></i></a>
                 </div>
             </div>
@@ -141,7 +141,7 @@
             <!-- message -->
             <div class="header-item">
                 <div class="dropdown me-2">
-                    <a href="chat.html" class="btn topbar-link">
+                    <a href="{{ route('dashboard') }}" class="btn topbar-link">
                         <i class="ti ti-message-circle-exclamation"></i>
                         <span class="badge rounded-pill">14</span>
                     </a>
@@ -177,7 +177,7 @@
                                 id="notification-1">
                                 <div class="d-flex">
                                     <div class="me-2 position-relative flex-shrink-0">
-                                        <img src="assets/img/users/user-01.jpg" class="avatar-md rounded-circle"
+                                        <img src="{{ asset('assets/img/users/user-01.jpg') }}" class="avatar-md rounded-circle"
                                             alt="Img">
                                     </div>
                                     <div class="flex-grow-1">
@@ -208,7 +208,7 @@
                                 id="notification-2">
                                 <div class="d-flex">
                                     <div class="me-2 position-relative flex-shrink-0">
-                                        <img src="assets/img/users/user-12.jpg" class="avatar-md rounded-circle"
+                                        <img src="{{ asset('assets/img/users/user-12.jpg') }}" class="avatar-md rounded-circle"
                                             alt="Img">
                                     </div>
                                     <div class="flex-grow-1">
@@ -239,7 +239,7 @@
                                 id="notification-3">
                                 <div class="d-flex">
                                     <div class="me-2 position-relative flex-shrink-0">
-                                        <img src="assets/img/profiles/avatar-12.jpg" class="avatar-md rounded-circle"
+                                        <img src="{{ asset('assets/img/profiles/avatar-12.jpg') }}" class="avatar-md rounded-circle"
                                             alt="Img">
                                     </div>
                                     <div class="flex-grow-1">
@@ -270,7 +270,7 @@
                             <div class="dropdown-item notification-item py-3 text-wrap" id="notification-4">
                                 <div class="d-flex">
                                     <div class="me-2 position-relative flex-shrink-0">
-                                        <img src="assets/img/profiles/avatar-08.jpg" class="avatar-md rounded-circle"
+                                        <img src="{{ asset('assets/img/profiles/avatar-08.jpg') }}" class="avatar-md rounded-circle"
                                             alt="Img">
                                     </div>
                                     <div class="flex-grow-1">
@@ -301,7 +301,7 @@
 
                         <!-- View All-->
                         <div class="p-2 rounded-bottom border-top text-center">
-                            <a href="notifications.html" class="text-center text-decoration-underline fs-14 mb-0">
+                            <a href="{{ route('dashboard') }}" class="text-center text-decoration-underline fs-14 mb-0">
                                 View All Notifications
                             </a>
                         </div>
@@ -314,14 +314,14 @@
             <div class="dropdown profile-dropdown d-flex align-items-center justify-content-center">
                 <a href="javascript:void(0);" class="topbar-link dropdown-toggle drop-arrow-none position-relative"
                     data-bs-toggle="dropdown" data-bs-offset="0,22" aria-haspopup="false" aria-expanded="false">
-                    <img src="assets/img/users/user-40.jpg" width="38" class="rounded-1 d-flex" alt="user-image">
+                    <img src="{{ asset('assets/img/users/user-40.jpg') }}" width="38" class="rounded-1 d-flex" alt="user-image">
                     <span class="online text-success"><i
                             class="ti ti-circle-filled d-flex bg-white rounded-circle border border-1 border-white"></i></span>
                 </a>
                 <div class="dropdown-menu dropdown-menu-end dropdown-menu-md p-2">
 
                     <div class="d-flex align-items-center bg-light rounded-3 p-2 mb-2">
-                        <img src="assets/img/users/user-40.jpg" class="rounded-circle" width="42" height="42" alt="Img">
+                        <img src="{{ asset('assets/img/users/user-40.jpg') }}" class="rounded-circle" width="42" height="42" alt="Img">
                         <div class="ms-2">
                             <p class="fw-medium text-dark mb-0">Katherine Brooks</p>
                             <span class="d-block fs-13">Installer</span>
@@ -329,7 +329,7 @@
                     </div>
 
                     <!-- Item-->
-                    <a href="profile-settings.html" class="dropdown-item">
+                    <a href="{{ route('dashboard') }}" class="dropdown-item">
                         <i class="ti ti-user-circle me-1 align-middle"></i>
                         <span class="align-middle">Profile Settings</span>
                     </a>
@@ -348,7 +348,7 @@
                     </a>
 
                     <!-- Item-->
-                    <a href="profile-settings.html" class="dropdown-item">
+                    <a href="{{ route('dashboard') }}" class="dropdown-item">
                         <i class="ti ti-settings me-1 align-middle"></i>
                         <span class="align-middle">Settings</span>
                     </a>

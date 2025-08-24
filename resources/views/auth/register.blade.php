@@ -117,7 +117,7 @@
                         </div>
                         <div class="text-center pb-4">
                             <p class="text-dark mb-0">Copyright &copy; <script
-                                    type="a3a628826097c89f92c81088-text/javascript">
+                                    type="text/javascript">
                                     document.write(new Date().getFullYear())
                                 </script> - CRMS</p>
                         </div>

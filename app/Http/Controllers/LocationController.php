@@ -49,7 +49,7 @@ class LocationController extends Controller
         ]);
 
         // Set the created_by field to the current authenticated user's ID
-        $validated['created_by'] = auth()->id();
+        $validated['created_by'] = Auth::user()->id;
 
         // Create the location
         $location = Location::create($validated);
@@ -75,13 +75,13 @@ class LocationController extends Controller
     public function show($id)
     {
         $location = Location::findOrFail($id);
-        
+
         // Check if request is AJAX
         if (request()->ajax()) {
             $location->created_at = $location->created_at->format('d M Y, h:i A');
             return response()->json($location);
         }
-        
+
         return view('location.show', compact('location'));
     }
     /**
@@ -93,12 +93,12 @@ class LocationController extends Controller
     public function edit($id)
     {
         $location = Location::findOrFail($id);
-        
+
         // Check if request is AJAX
         if (request()->ajax()) {
             return response()->json($location);
         }
-        
+
         return redirect()->route('location.index');
     }
     /**
@@ -125,7 +125,7 @@ class LocationController extends Controller
         ]);
 
         // Set the updated_by field to the current authenticated user's ID
-        $validated['updated_by'] = auth()->id();
+        $validated['updated_by'] = Auth::user()->id;
 
         // Update the location
         $location->update($validated);
@@ -163,7 +163,7 @@ class LocationController extends Controller
 
         return redirect()->route('location.index')->with('success', 'Location deleted successfully');
     }
-    
+
     /**
      * Get locations data for DataTables
      *
@@ -176,31 +176,111 @@ class LocationController extends Controller
         $start = $request->get('start', 0);
         $length = $request->get('length', 10);
         $search = $request->get('search.value');
+        $sortBy = $request->get('sort_by', 'newest'); // Default to newest
         
+        // Get order column and direction from DataTables
+        $orderColumn = $request->get('order.0.column');
+        $orderDir = $request->get('order.0.dir');
+        $columns = $request->get('columns');
+
         // Query builder for locations
         $query = Location::query();
-        
+
         // Apply search if provided
         if (!empty($search)) {
-            $query->where(function($q) use ($search) {
+            $query->where(function ($q) use ($search) {
                 $q->where('name', 'like', "%{$search}%")
-                  ->orWhere('email', 'like', "%{$search}%")
-                  ->orWhere('address', 'like', "%{$search}%")
-                  ->orWhere('city', 'like', "%{$search}%")
-                  ->orWhere('state', 'like', "%{$search}%")
-                  ->orWhere('country', 'like', "%{$search}%");
+                    ->orWhere('email', 'like', "%{$search}%")
+                    ->orWhere('address', 'like', "%{$search}%")
+                    ->orWhere('city', 'like', "%{$search}%")
+                    ->orWhere('state', 'like', "%{$search}%")
+                    ->orWhere('country', 'like', "%{$search}%");
             });
         }
         
+        // Apply individual column filters
+        if ($request->has('name_filter') && !empty($request->name_filter)) {
+            $query->where('name', 'like', "%{$request->name_filter}%");
+        }
+        
+        if ($request->has('email_filter') && !empty($request->email_filter)) {
+            $query->where('email', 'like', "%{$request->email_filter}%");
+        }
+        
+        if ($request->has('address_filter') && !empty($request->address_filter)) {
+            $query->where('address', 'like', "%{$request->address_filter}%");
+        }
+        
+        if ($request->has('city_filter') && !empty($request->city_filter)) {
+            $query->where('city', 'like', "%{$request->city_filter}%");
+        }
+        
+        if ($request->has('state_filter') && !empty($request->state_filter)) {
+            $query->where('state', 'like', "%{$request->state_filter}%");
+        }
+        
+        if ($request->has('country_filter') && !empty($request->country_filter)) {
+            $query->where('country', 'like', "%{$request->country_filter}%");
+        }
+        
+        if ($request->has('zip_code_filter') && !empty($request->zip_code_filter)) {
+            $query->where('zip_code', 'like', "%{$request->zip_code_filter}%");
+        }
+        
+        // Apply date range filter
+        if ($request->has('start_date') && $request->has('end_date')) {
+            $startDate = $request->start_date;
+            $endDate = $request->end_date;
+            
+            // Add one day to end date to include the entire end date
+            $endDate = date('Y-m-d', strtotime($endDate . ' +1 day'));
+            
+            $query->whereBetween('created_at', [$startDate, $endDate]);
+        }
+        
+        if ($request->has('status_filter') && !empty($request->status_filter)) {
+            // Handle array of status values from checkboxes
+            $statusFilter = $request->status_filter;
+            
+            // If it's a string, convert to array for consistent handling
+            if (!is_array($statusFilter)) {
+                $statusFilter = [$statusFilter];
+            }
+            
+            $query->where(function($q) use ($statusFilter) {
+                foreach ($statusFilter as $status) {
+                    if (strtolower($status) === 'active') {
+                        $q->orWhere('status', 1);
+                    } else if (strtolower($status) === 'inactive') {
+                        $q->orWhere('status', 0);
+                    }
+                }
+            });
+        }
+
         // Get total count
         $totalRecords = $query->count();
+
+        // Apply column sorting if provided by DataTables
+        if ($orderColumn !== null && isset($columns[$orderColumn]['name'])) {
+            $columnName = $columns[$orderColumn]['name'];
+            if ($columnName !== 'action') { // Skip sorting for action column
+                $query->orderBy($columnName, $orderDir);
+            }
+        } else {
+            // Apply sorting based on sort_by parameter if no column sorting
+            if ($sortBy === 'oldest') {
+                $query->oldest('id');
+            } else {
+                $query->latest('id'); // Default to newest
+            }
+        }
         
         // Apply pagination
         $locations = $query->skip($start)
-                          ->take($length)
-                          ->latest()
-                          ->get();
-        
+            ->take($length)
+            ->get();
+
         // Format data for DataTables
         $data = [];
         foreach ($locations as $location) {
@@ -212,11 +292,15 @@ class LocationController extends Controller
                 'city' => $location->city,
                 'state' => $location->state,
                 'country' => $location->country,
+                'zip_code' => $location->zip_code,
+                'created_by' => $location->created_by ? User::find($location->created_by)->name : null,
+                'updated_by' => $location->updated_by ? User::find($location->updated_by)->name : null,
                 'status' => $location->status == 1 ? 'Active' : 'Inactive',
-                'created_at' => $location->created_at->format('d M Y, h:i A')
+                'created_at' => $location->created_at->format('d M Y, h:i A'),
+                'updated_at' => $location->updated_at ? $location->updated_at->format('d M Y, h:i A') : null
             ];
         }
-        
+
         return response()->json([
             'draw' => intval($draw),
             'recordsTotal' => $totalRecords,

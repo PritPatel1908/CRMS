@@ -1,5 +1,5 @@
 <footer class="footer d-block d-md-flex justify-content-between text-md-start text-center">
-    <p class="mb-md-0 mb-1">Copyright &copy; <script type="3a1910e81f9f9b9575a9aaef-text/javascript">
+    <p class="mb-md-0 mb-1">Copyright &copy; <script type="text/javascript">
             document.write(new Date().getFullYear())
         </script> <a href="javascript:void(0);" class="link-primary text-decoration-underline">CRMS</a></p>
     <div class="d-flex align-items-center gap-2 footer-links justify-content-center justify-content-md-end">

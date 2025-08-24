@@ -517,6 +517,7 @@ Template Name: CRMS - Bootstrap Admin Template
 	if ($('.phone').length > 0) {
 		document.querySelectorAll(".phone").forEach(input => {
 			window.intlTelInput(input, {
+				// Use local utils.js file
 				utilsScript: "assets/plugins/intltelinput/js/utils.js",
 			});
 		});

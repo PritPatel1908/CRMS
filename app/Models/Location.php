@@ -24,8 +24,10 @@ class Location extends Model
         'country',
         'zip_code',
         'status',
+        'created_by',
+        'updated_by',
     ];
-    
+
     /**
      * Get the user who created this location.
      */
@@ -33,7 +35,7 @@ class Location extends Model
     {
         return $this->belongsTo(User::class, 'created_by');
     }
-    
+
     /**
      * Get the user who last updated this location.
      */
